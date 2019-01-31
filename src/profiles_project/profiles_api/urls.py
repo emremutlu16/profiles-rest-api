@@ -7,7 +7,10 @@ from . import views
 
 router = DefaultRouter()
 router.register('hello-viewset', views.HelloViewSet, base_name='hello-viewset')
-
+router.register('profile', views.UserProfileViewSet)
+# Bir model viewset register ederken base_name belirtmek zorunda değilim, çünkü
+# Django rest framework modelde serializer a kayıtlı olup viewset imize kayıtlı
+# olanlara bakarak otomatik olarak algılıyor. 
 urlpatterns = [
     url(r'^hello-view/', views.HelloApiView.as_view()),
     url(r'', include(router.urls)) # Bu şekilde router object bizim için router
@@ -16,4 +19,5 @@ urlpatterns = [
     # bir url ile eşleşmezse router ımızı feed edicek, böylece ilk yazdığımız
     # (12.satırdaki) url pattern ini kontrol edecek eğer orda birşeyle eşleşmez
     # ise o zaman router dakileri kontrol edecek.
+
 ]
