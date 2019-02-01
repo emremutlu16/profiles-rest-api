@@ -4,9 +4,11 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.views import Response
 from rest_framework import status
+from rest_framework.authentication import TokenAuthentication
 
 from . import serializers
 from . import models
+from . import permissions
 
 # Create your views here.
 
@@ -110,3 +112,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile,)
+    """authentication_classes ve permission_classes değişkenlerinin tuple olarak
+    tanımlanma sebebi immutable olmasını sağlaması ve sonrasında birden çok
+    authentication class ya da permission class eklemek isteyebilirim. Tuple
+    olması buna olanak sağlar. """
