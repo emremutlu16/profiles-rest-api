@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.views import Response
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
 
 from . import serializers
 from . import models
@@ -118,3 +119,5 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     tanımlanma sebebi immutable olmasını sağlaması ve sonrasında birden çok
     authentication class ya da permission class eklemek isteyebilirim. Tuple
     olması buna olanak sağlar. """
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',)
