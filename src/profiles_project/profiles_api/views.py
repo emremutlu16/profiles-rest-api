@@ -6,6 +6,18 @@ from rest_framework.views import Response
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework import filters
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+# Django rest framework ün login işlemlerini halleden bir login api view ı var.
+# Tek problemi API view olarak ayarlı ve viewset option yok. Bu da demek oluyor
+# ki standart default router ı url ayarlamak için kullanamayız.
+# ObtainAuthToken bir APIView, bunu kullanıcam ancak kullandığım sınıfı ViewSet
+# ten inherit edicem ki sistemi viewset kullanıyormuşum gibi kandırabileyim.
+# Eğer kandırabilirsem url de router a register edebilirim. Ama bu hileyi
+# yapmayıp api view kullanarak devam edersem admin panelinde api rootunda
+# api/hello-viewset/, api/profile/ görürüm ancak api/login göremem
+# api/login/ e gittiğimde HTTP Not allowed görme sebebim loginde sadece post
+# yapılabilmesi loginde iken get yapamam.
 
 from . import serializers
 from . import models
@@ -121,3 +133,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     olması buna olanak sağlar. """
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
+
+
+class LoginViewSet(viewsets.ViewSet):
+    """Checks email and password and returns an auth token."""
+
+    serializer_class = AuthTokenSerializer
+
+    def create(self, request):
+        """Use the ObtainAuthToken APIView to validate and create a token."""
+
+        return ObtainAuthToken().post(request)
