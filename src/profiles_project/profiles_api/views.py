@@ -18,6 +18,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 # api/hello-viewset/, api/profile/ görürüm ancak api/login göremem
 # api/login/ e gittiğimde HTTP Not allowed görme sebebim loginde sadece post
 # yapılabilmesi loginde iken get yapamam.
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 from . import serializers
 from . import models
@@ -144,3 +146,17 @@ class LoginViewSet(viewsets.ViewSet):
         """Use the ObtainAuthToken APIView to validate and create a token."""
 
         return ObtainAuthToken().post(request)
+
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handles creating, reading and updating profile feed items."""
+
+    authentication_classes = (TokenAuthentication,)
+    serializer_class = serializers.ProfileFeedItemSerializer
+    queryset = models.ProfileFeedItem.objects.all()
+    permission_classes = (permissions.PostOwnStatus, IsAuthenticated)
+
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in user."""
+
+        serializer.save(user_profile=self.request.user)

@@ -12,6 +12,7 @@ router.register('login', views.LoginViewSet, base_name='login')
 # Bir model viewset register ederken base_name belirtmek zorunda değilim, çünkü
 # Django rest framework modelde serializer a kayıtlı olup viewset imize kayıtlı
 # olanlara bakarak otomatik olarak algılıyor.
+router.register('feed', views.UserProfileFeedViewSet)
 urlpatterns = [
     url(r'^hello-view/', views.HelloApiView.as_view()),
     url(r'', include(router.urls)) # Bu şekilde router object bizim için router
